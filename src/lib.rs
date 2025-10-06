@@ -1,1 +1,1 @@
-mod synology_api;
+pub mod synology_api;
