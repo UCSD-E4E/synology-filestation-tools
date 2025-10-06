@@ -1,7 +1,11 @@
+use crate::synology_api::authentication_database::AuthenticationDatabase;
+
 pub struct AuthenticationManager;
 
 impl AuthenticationManager {
     pub async fn authenticate(&self) {
+        let database = AuthenticationDatabase { };
+
         panic!("Not implemented yet");
     }
 
