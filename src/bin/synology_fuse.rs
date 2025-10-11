@@ -1,5 +1,6 @@
 use anyhow::{Context, Result};
 use clap::{Arg, Command, crate_version};
+use tracing::debug;
 use tracing_appender::rolling;
 use tracing_subscriber::fmt::writer::MakeWriterExt;
 
@@ -79,8 +80,10 @@ async fn main() -> Result<()> {
         let password = matches.get_one::<String>("password");
 
         let password = if let Some(password) = password {
+            debug!("Using the provided password");
             password.to_owned()
         } else {
+            debug!("Prompting for password");
             rpassword::prompt_password("Password: ")?
         };
 
