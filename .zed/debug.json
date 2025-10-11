@@ -5,9 +5,9 @@
 [
   {
     "adapter": "CodeLLDB",
-    "label": "cargo run -p synology-filestation-tools fuse",
+    "label": "cargo run -p synology-filestation-tools synology_fuse",
     "build": {
-      "label": "cargo run -p synology-filestation-tools fuse",
+      "label": "cargo run -p synology-filestation-tools synology_fuse",
       "command": "cargo",
       "args": ["build", "--package", "synology-filestation-tools"],
       "env": {

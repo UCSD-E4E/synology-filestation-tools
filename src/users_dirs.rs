@@ -21,21 +21,36 @@ fn string_to_static_str(s: String) -> &'static str {
 
 #[tracing::instrument]
 fn get_app_info() -> Result<AppInfo, UsersDirsError> {
-    let current_exe = env::current_exe()?;
-
-    let app_name = format!(
-        "engineers_for_exploration-{}",
-        current_exe
-            .file_stem()
-            .expect("We should have a file name")
-            .to_str()
-            .expect("OS string should be UTF8")
-    );
+    let app_name = format!("engineers_for_exploration-{}", get_current_exe_name()?);
 
     Ok(AppInfo {
         name: string_to_static_str(app_name),
         author: "Engineers for Exploration",
     })
+}
+
+pub fn get_current_exe_name() -> Result<String, UsersDirsError> {
+    let current_exe = env::current_exe()?;
+
+    Ok(current_exe
+        .file_stem()
+        .expect("We should have a file name")
+        .to_str()
+        .expect("OS string should be UTF8")
+        .to_string())
+}
+
+pub fn get_current_exe_name_as_str() -> Result<&'static str, UsersDirsError> {
+    let current_exe = env::current_exe()?;
+
+    Ok(string_to_static_str(
+        current_exe
+            .file_stem()
+            .expect("We should have a file name")
+            .to_str()
+            .expect("OS string should be UTF8")
+            .to_string(),
+    ))
 }
 
 #[tracing::instrument]

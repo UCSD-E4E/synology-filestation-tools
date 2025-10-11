@@ -8,10 +8,20 @@ use crate::synology_api::authentication_database::{
 #[derive(Educe)]
 #[educe(Debug)]
 pub struct Credential {
-    pub user: String,
+    pub username: String,
     #[educe(Debug(ignore))] // Do not include password in logs.
     pub password: String,
     pub totp: Option<String>,
+}
+
+impl Credential {
+    pub fn new(username: String, password: String) -> Self {
+        Self {
+            username,
+            password,
+            totp: None,
+        }
+    }
 }
 
 #[derive(Error, Debug)]
@@ -48,7 +58,7 @@ impl AuthenticationManager<'_> {
     }
 
     #[tracing::instrument]
-    pub async fn login(&self, credential: Credential) {
+    pub async fn login(&self, credential: &Credential) {
         panic!("Not implemented yet");
     }
 
