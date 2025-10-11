@@ -24,8 +24,12 @@ fn setup_logging() -> Result<()> {
 async fn main() -> Result<()> {
     setup_logging()?;
 
-    let auth_manager = AuthenticationManager {};
-    auth_manager.authenticate().await?;
+    let auth_manager = AuthenticationManager::new("", "")?;
+    let is_authenticated = auth_manager.is_authenticated()?;
+
+    if !is_authenticated {
+        println!("User is not authenticated");
+    }
 
     Ok(())
 }

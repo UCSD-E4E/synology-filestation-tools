@@ -10,10 +10,14 @@ use crate::users_dirs::{UsersDirsError, get_config_dir};
 pub enum AuthenticationDatabaseError {
     #[error("Sqlite database is not initialized.")]
     DatabaseNotInitialized,
+    #[error("No entry for url and user in database.")]
+    NoEntryForUrlAndUser,
     #[error(transparent)]
     SqliteError(#[from] rusqlite::Error),
     #[error(transparent)]
     StdIoError(#[from] std::io::Error),
+    #[error("User is not logged in.")]
+    UserNotLoggedIn,
     #[error(transparent)]
     UsersDirsError(#[from] UsersDirsError),
 }
@@ -26,9 +30,23 @@ pub struct AuthenticationDatabase {
 impl AuthenticationDatabase {
     #[tracing::instrument]
     pub fn new() -> Result<Self, AuthenticationDatabaseError> {
-        Ok(AuthenticationDatabase {
+        Ok(Self {
             connection: Self::get_connection()?,
         })
+    }
+
+    #[tracing::instrument]
+    pub fn is_user_logged_in(
+        &self,
+        url: &str,
+        user: &str,
+    ) -> Result<bool, AuthenticationDatabaseError> {
+        let mut stmt: rusqlite::Statement<'_> = self
+            .connection
+            .prepare("SELECT COUNT(*) FROM Credentials WHERE url=? AND user=?")?;
+        let count: i64 = stmt.query_row([url, user], |row| row.get(0))?;
+
+        Ok(count > 0)
     }
 
     #[tracing::instrument]
