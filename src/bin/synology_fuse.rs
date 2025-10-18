@@ -88,7 +88,7 @@ async fn main() -> Result<()> {
         };
 
         let crendential = Credential::new(user.to_owned(), password);
-        auth_manager.login(&crendential).await;
+        auth_manager.login(&crendential, true, None).await?;
     }
 
     Ok(())
